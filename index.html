@@ -1,95 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My CIS 302 Portfolio</title>
+    <title>Solar Calculator</title>
     <style>
         body {
-            background-color: green;
             font-family: Arial, sans-serif;
-        }
-        table {
-            width: 600px;
-            background-color: lightgreen;
-            margin: auto;
-            border-collapse: collapse;
-            text-align: center;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 10px;
-        }
-        th {
-            background-color: #0000FF; /* Solid blue background for table header */
-            color: white;
-        }
-        img {
-            width: 200px;
-            height: 150px;
-            padding: 10px;
-            border: 1px solid black;
-            border: 3px solid blue;
-        }
-        h1 {
-            font-size: 24px;
-            text-align: center;
-            color: white;
-            margin-bottom: 0;
-        }
-        p {
+            background-image: url(https://atlantickeyenergy.com/wp-content/uploads/2022/04/how-effective-are-dirty-solar-panels-2046x930.jpg); /* Replace with a suitable image URL */
+            background-repeat: repeat;
+            background-size: cover;
+        
             margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
         }
-        .header {
-            background-color: green;
+        header {
+            background-color: rgba(76, 175, 80, 0.9); /* Semi-transparent background */
+            width: 100%;
             padding: 20px;
-        }
-        .footer {
             color: white;
             text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            margin: 100px 20px 20px 20px; /* Adjusted for header space */
+            box-sizing: border-box;
+        }
+        h2 {
+            text-align: center;
+            color: #333333;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 10px 0;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
             padding: 10px;
-            background-color: green;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
-            text-align: left;
+        button:hover {
+            background-color: #45a049;
         }
-        li a {
-            text-decoration: none;
-            color: purple;
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(249, 249, 249, 0.9); /* Semi-transparent background */
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333333;
+        }
+        .result p {
+            margin: 10px 0;
+        }
+        .error {
+            color: red;
+        }
+        fieldset {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+        }
+        legend {
+            font-weight: bold;
+        }
+        .fieldset-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .fieldset-grid label {
+            font-weight: normal;
+            margin-top: 0;
+        }
+        .fieldset-grid input {
+            padding: 5px;
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>CIS 302: JavaScript Fundamentals</h1>
-    </div>
-    <table>
-        <tr>
-            <td>Name:</td>
-            <td>Jeffrey Hu</td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <img src="Photo.jpeg" alt="Jeffrey Hu">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p>Links to my JavaScript Projects</p>
-                <ul>
-                    <li><a href="https://jocular-halva-aab6d4.netlify.app/" target="_blank">A JavaScript Tip Calculator</a></li>
-                    <li><a href="https://harmonious-semolina-204085.netlify.app/" target="_blank">A JavaScript Stopwatch</a></li>
-                    <li><a href="https://jolly-halva-92e4b5.netlify.app" target="_blank">A JavaScript Hangman Game</a></li>
-                    <li><a href="https://harmonious-semolina-204085.netlify.app/" target="_blank">A JavaScript Tic-Tac-Toe Game</a></li>
-                    <li><a href="https://cerulean-frangipane-f8290f.netlify.app" target="_blank">A JavaScript Quiz</a></li>
-                </ul>
-            </td>
-        </tr>
-    </table>
-    <div class="footer">
-        <p>My CIS 302 Portfolio</p>
-    </div>
+
+<header>
+    Solar Energy Calculator
+</header>
+
+<div class="container">
+    <h2>Calculate Your Solar Energy</h2>
+    <label for="zone">Zone:</label>
+    <select id="zone">
+        <option value="1">Zone 1</option>
+        <option value="2">Zone 2</option>
+        <option value="3">Zone 3</option>
+        <option value="4">Zone 4</option>
+        <option value="5">Zone 5</option>
+    </select>
+
+    <label for="systemSize">System Size (kW):</label>
+    <input type="number" id="systemSize" placeholder="Enter system size in kW">
+    
+    <label for="efficiency">Panel Efficiency (%):</label>
+    <input type="number" id="efficiency" placeholder="Enter panel efficiency in %">
+    
+    <fieldset>
+        <legend>Average Daily Sunlight Hours for Each Month (kWh/m²/day)</legend>
+        <div class="fieldset-grid">
+            <label for="january">January:</label>
+            <input type="number" id="january" placeholder="January">
+            <label for="february">February:</label>
+            <input type="number" id="february" placeholder="February">
+            <label for="march">March:</label>
+            <input type="number" id="march" placeholder="March">
+            <label for="april">April:</label>
+            <input type="number" id="april" placeholder="April">
+            <label for="may">May:</label>
+            <input type="number" id="may" placeholder="May">
+            <label for="june">June:</label>
+            <input type="number" id="june" placeholder="June">
+            <label for="july">July:</label>
+            <input type="number" id="july" placeholder="July">
+            <label for="august">August:</label>
+            <input type="number" id="august" placeholder="August">
+            <label for="september">September:</label>
+            <input type="number" id="september" placeholder="September">
+            <label for="october">October:</label>
+            <input type="number" id="october" placeholder="October">
+            <label for="november">November:</label>
+            <input type="number" id="november" placeholder="November">
+            <label for="december">December:</label>
+            <input type="number" id="december" placeholder="December">
+        </div>
+    </fieldset>
+    
+    <button onclick="calculateSolar()">Calculate</button>
+    
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function calculateSolar() {
+        var zone = document.getElementById('zone').value;
+        var systemSize = document.getElementById('systemSize').value;
+        var efficiency = document.getElementById('efficiency').value;
+
+        var months = [
+            'january', 'february', 'march', 'april', 'may', 'june', 
+            'july', 'august', 'september', 'october', 'november', 'december'
+        ];
+        
+        var totalSunlight = 0;
+        var validInputs = true;
+        
+        months.forEach(function(month) {
+            var monthValue = document.getElementById(month).value;
+            if (monthValue) {
+                totalSunlight += parseFloat(monthValue);
+            } else {
+                validInputs = false;
+            }
+        });
+
+        if (zone && systemSize && efficiency && validInputs) {
+            var avgDailySunlight = totalSunlight / 12;
+            var dailyOutput = (avgDailySunlight * systemSize * (efficiency / 100)).toFixed(2);
+            var yearlyOutput = (dailyOutput * 365).toFixed(2);
+            
+            document.getElementById('result').innerHTML = 
+                `<p>Zone: ${zone}</p>
+                 <p>Average Daily Sunlight: ${avgDailySunlight.toFixed(2)} kWh/m²/day</p>
+                 <p>Daily Energy Output: ${dailyOutput} kWh</p>
+                 <p>Yearly Energy Output: ${yearlyOutput} kWh</p>`;
+        } else {
+            document.getElementById('result').innerHTML = '<p class="error">Please fill out all fields.</p>';
+        }
+    }
+</script>
+
 </body>
 </html>
