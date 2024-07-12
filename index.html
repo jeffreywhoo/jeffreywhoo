@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWhoo Music Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url(https://www.techsmith.com/blog/wp-content/uploads/2023/08/audiovisualizerex2.gif);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .player {
+            width: 300px;
+            text-align: center;
+            background-color: #1db954;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .player img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .player .info {
+            margin: 15px 0;
+        }
+        .player .info h2 {
+            margin: 0;
+            font-size: 30px;
+        }
+        .player .info p {
+            margin: 5px 0 0;
+            font-size: 20px;
+            color: #333;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .controls button {
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+            outline: none;
+        }
+        .volume-control {
+            margin-top: 20px;
+            width: 80%;
+        }
+        .volume-control input {
+            width: 100%;
+        }
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .progress-container {
+            width: 100%;
+            background: #333;
+            cursor: pointer;
+            height: 5px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .progress {
+            width: 0;
+            height: 100%;
+            background: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <marquee><h1>JWHOO MUSIC PLAYER</h1></marquee>
+    <div class="container">
+        <div class="player">
+            <img src="album-cover.jpg" alt="Album Cover" id="album-cover">
+            <div class="info">
+                <h2 id="title">Song Title</h2>
+                <p id="artist">Artist Name</p>
+            </div>
+            <div class="controls">
+                <button id="prev"><i class="previous track"></i>⏮️</button>
+                <button id="play"><i class="play"></i>▶️</button>
+                <button id="next"><i class="next track"></i>⏭️</button>
+            </div>
+            <div class="time-info">
+                <span id="current-time">0:00</span>
+                <span id="time-left">0:00</span>
+            </div>
+            <div class="progress-container" id="progress-container">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="volume-control">
+                <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+            </div>
+        </div>
+    </div>
+    <script>
+        const playButton = document.getElementById('play');
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+        const volumeSlider = document.getElementById('volume');
+        const title = document.getElementById('title');
+        const artist = document.getElementById('artist');
+        const albumCover = document.getElementById('album-cover');
+        const currentTimeDisplay = document.getElementById('current-time');
+        const timeLeftDisplay = document.getElementById('time-left');
+        const progressContainer = document.getElementById('progress-container');
+        const progress = document.getElementById('progress');
+
+        const songs = [
+            {
+                title: "愛在記憶中找你",
+                artist: "林峯",
+                cover: "https://media.themoviedb.org/t/p/w500/Ak40P6TWthdQ9diRki5RIcJ6r95.jpg",
+                src: "愛在記憶中找你 - 林峯.mp3"
+            },
+            {
+                title: "何為永恆",
+                artist: "Hu Xia",
+                cover: "https://i.mydramalist.com/D8J8of.jpg",
+                src: "何為永恆 (電視劇倚天屠龍記片尾曲).mp3"
+            },
+            {
+                title: "別再怕",
+                artist: "菊梓喬",
+                cover: "https://i.mydramalist.com/kkV2gf.jpg.jpg",
+                src: "HANA菊梓喬 - 別再怕 (劇集 兄弟 片尾曲).mp3"
+            },
+            {
+                title: "Chasing that Feeling",
+                artist: "TOMORROW X TOGETHER",
+                cover: "https://i.pinimg.com/736x/9a/2b/73/9a2b73b9e8f1295de38824591d1eed01.jpg",
+                src: "TXT  - Chasing That Feeling.mp3"
+            },
+            {
+                title: "eight (에잇)",
+                artist: "IU (아이유) eight (에잇) (feat. BTS SUGA)",
+                cover: "https://i1.sndcdn.com/artworks-yYe2wRPkqjzhLzSz-1wpPBg-t500x500.jpg",
+                src: "IU (아이유) eight (에잇) (feat. BTS SUGA).mp3"
+            },
+            {
+                title: "One Spark",
+                artist: "TWICE",
+                cover: "https://i.pinimg.com/236x/95/68/d9/9568d9991eb16b67ff9f4b3068563092.jpg",
+                src: "TWICE - ONE SPARK.mp3"
+            }
+        ];
+
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let audio = new Audio(songs[currentSongIndex].src);
+
+        const loadSong = (index) => {
+            const song = songs[index];
+            title.textContent = song.title;
+            artist.textContent = song.artist;
+            albumCover.src = song.cover;
+            audio.src = song.src;
+            audio.onloadedmetadata = () => {
+                timeLeftDisplay.textContent = formatTime(audio.duration);
+                progress.style.width = '0%';
+            };
+        };
+
+        const playSong = () => {
+            audio.play();
+            isPlaying = true;
+            playButton.innerHTML = '⏸️';
+        };
+
+        const pauseSong = () => {
+            audio.pause();
+            isPlaying = false;
+            playButton.innerHTML = '▶️';
+        };
+
+        playButton.addEventListener('click', () => {
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        });
+
+        prevButton.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            loadSong(currentSongIndex);
+            playSong();
+        });
+
+        nextButton.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+            playSong();
+        });
+
+        audio.addEventListener('ended', () => {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+            playSong();
+        });
+
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+            timeLeftDisplay.textContent = formatTime(audio.duration - audio.currentTime);
+            updateProgress();
+        });
+
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        });
+
+        const updateProgress = () => {
+            const { duration, currentTime } = audio;
+            const progressPercent = (currentTime / duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+        };
+
+        const formatTime = (time) => {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60);
+            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        };
+
+        loadSong(currentSongIndex);
+    </script>
+</body>
+</html>
+
+
